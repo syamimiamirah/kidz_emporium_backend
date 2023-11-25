@@ -1,0 +1,137 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version" :"1.1.0",
+        "title": "Kidz Emporium",
+        "description": "Kidz Emporium Therapy Management System - Flutter/Nodejs",
+        "license":{
+            "name": "MIT",
+            "url": "https://opensource.org/license/MIT"
+        }
+    },
+    "host": "localhost:4000",
+    "basePath": "/",
+    "tags": [
+        {
+            "name":"Users",
+            "description": "Users API"
+        }, 
+        {
+            "name":"Reminder",
+            "description": "Reminder API"
+        }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+        "/api/register":{
+            "post": {
+                "tags": ["Users"],
+                "summary": "Register API",
+                "parameters": [
+                    {
+                        "name": "RegisterModel",
+                        "in": "body",
+                        "description": "User Registration",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/RegisterModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "OK",
+                        "schema":{
+                            "$ref":"#/definitions/ServiceResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login":{
+            "post": {
+                "tags": ["Users"],
+                "summary": "Login API",
+                "parameters": [
+                    {
+                        "name": "RegisterModel",
+                        "in": "body",
+                        "description": "User Login",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/LoginModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "OK",
+                        "schema":{
+                            "$ref":"#/definitions/ServiceResponse"
+                        }
+                    }
+                }
+            }
+        }
+    }, 
+    "definitions": {
+        "ServiceResponse": {
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array", 
+                    "items": {
+                        "$ref": "#/definitions/RegisterModel"
+                    }
+                }
+            }
+        },
+        "RegisterModel": {
+            "required": [
+                "name",
+                "email",
+                "phone",
+                "role", 
+                "password"
+            ],
+            "properties": {
+                "name":{
+                    "type": "string"
+                },
+                "email":{
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                },
+                "role":{
+                    "type": "string"
+                },
+                "password":{
+                    "type": "string"
+                }
+            }
+        },
+        "LoginModel": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email":{
+                    "type": "string"
+                },
+                "password":{
+                    "type": "string"
+                }
+            }
+        }
+    }
+    
+}
