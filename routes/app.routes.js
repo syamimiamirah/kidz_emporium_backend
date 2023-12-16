@@ -2,14 +2,15 @@ const express = require("express");
 
 const UserController = require("../controllers/user.controller");
 const ReminderController = require('../controllers/reminder.controller');
-const router = express.Router();
+const routes = express.Router();
 
-router.post("/register", UserController.register);
-router.post("/login", UserController.login);
+routes.post("/register", UserController.register);
+routes.post("/login", UserController.login);
 
-router.post("/reminder", ReminderController.createReminder);
-// router.get("/reminder/:id", ReminderController.findOne);
-// router.put("/reminder/:id", ReminderController.update);
-// router.delete("/reminder/:id", ReminderController.delete);
+routes.post("/reminder", ReminderController.createReminder);
+routes.get("/get-reminder", ReminderController.getReminder);
+routes.post("/update-reminder", ReminderController.updateReminder);
+routes.delete("/delete-reminder", ReminderController.deleteReminder);
+routes.get('/get-reminder-details/:id', ReminderController.getReminderDetails);
 
-module.exports = router;
+module.exports = routes;

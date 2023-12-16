@@ -1,14 +1,14 @@
-const { user } = require('../models/user.model');
+const user  = require('../models/user.model');
 const bcrypt = require("bcryptjs");
 const auth = require("../middlewares/auth");
 
 async function login({email, password}, callback){
-    const UserModel = await user.findOne({email}, null, { maxTimeMS: 30000 });
+    const UserModel = await user.findOne({email});
 
     if(UserModel != null){
         if(bcrypt.compareSync(password, UserModel.password)){
             const token = auth.generateAccessToken(UserModel.toJSON());
-            return callback(null, {...UserModel.toJSON(), token});
+            return callback(null, {_id: UserModel._id, ...UserModel.toJSON(), token});
         }else{
             return callback({
                 message: "Invalid Email/Password"

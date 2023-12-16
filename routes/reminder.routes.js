@@ -2,8 +2,10 @@ const routes = require('express').Router();
 const ReminderController = require("../controllers/reminder.controller");
 
 routes.post("/reminder", ReminderController.createReminder);
-// routes.get("/reminder/:id", ReminderController.findOne);
-// routes.put("/reminder/:id", ReminderController.update);
-// routes.delete("/reminder/:id", ReminderController.delete);
+routes.get("/get-reminder", ReminderController.getReminder);
+routes.post("/update-reminder", ReminderController.updateReminder);
+routes.delete("/delete-reminder", ReminderController.deleteReminder);
+routes.get('/get-reminder-details/:id', ReminderController.getReminderDetails);
+
 
 module.exports = routes;
