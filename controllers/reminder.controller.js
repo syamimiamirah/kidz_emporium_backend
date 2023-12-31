@@ -24,13 +24,20 @@ exports.getReminder = async (req, res, next) => {
 
 exports.getReminderDetails = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; // Use req.params to get the ID from the URL
         let reminderDetails = await reminderServices.getReminderDetails(id);
+        
+        if (!reminderDetails) {
+            return res.status(404).json({ status: false, error: 'Reminder not found' });
+        }
+
         res.json({ status: true, success: reminderDetails });
     } catch (error) {
-        next(error);
+        console.error('Error fetching reminder details:', error);
+        return res.status(500).json({ status: false, error: 'Error fetching reminder details' });
     }
-};
+}
+
 
 exports.deleteReminder = async (req, res, next) => {
     try {
@@ -50,8 +57,9 @@ exports.deleteReminder = async (req, res, next) => {
 
 exports.updateReminder = async (req, res, next) => {
     try {
-      const { id, updatedData } = req.body;
-      const updatedReminder = await reminderServices.updateReminder(id, updatedData);
+        const reminderId = req.params.id;
+        const updatedData = req.body.updatedData;
+      const updatedReminder = await reminderServices.updateReminder(reminderId, updatedData);
   
       res.json({ status: true, success: updatedReminder });
     } catch (error) {
