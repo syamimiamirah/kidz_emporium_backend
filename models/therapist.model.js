@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const mongoose = require("mongoose");
-const UserModel = require("../models/user.model")
+const UserModel = require("../models/user.model");
+const BookingModel = require("../models/booking.model");
 const { Schema } = mongoose;
 
 const therapist = new Schema({
@@ -24,6 +25,10 @@ const therapist = new Schema({
             type: String,
             required: true
         },
+        bookings: {
+            type: Schema.Types.ObjectId,
+            ref: 'booking'
+        }
 
     }, {
         toJson: {

@@ -6,6 +6,8 @@ const UserModel = require('./models/user.model');
 const ReminderModel = require('./models/reminder.model');
 const errors = require("./middlewares/errors");
 const swaggerUI = require("swagger-ui-express"), swaggerDocument = require("./swagger.json");
+const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3nYmyGrf9WCnKcYhMF5j89Z5oOUFpj8wv9DFkJd4UarJJ2Bjaa7WQyf83VHOs5V6jxJLodNCa00XI0tuTH3');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_DB_CONFIG.DB, {
     useNewUrlParser: true, 
@@ -25,6 +27,13 @@ app.use(express.json());
 app.use("/api", require("./routes/app.routes"));
 app.use(errors.errorHandler);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+app.post('/webhook', (req, res) => {
+    // Handle webhook event
+    const event = req.body;
+    // Process the event
+    res.sendStatus(200); // Respond to Stripe with a success status
+  });
 
 
 app.get('/', (req, res)=>{

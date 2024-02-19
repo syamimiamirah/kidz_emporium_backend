@@ -6,5 +6,6 @@ routes.get("/get-child", ChildController.getChild);
 routes.put("/update-child/:id", ChildController.updateChild);
 routes.delete("/delete-child", ChildController.deleteChild);
 routes.get('/get-child-details/:id', ChildController.getChildDetails);
+routes.get('/children', ChildController.getAllChildren);
 
 module.exports = routes;

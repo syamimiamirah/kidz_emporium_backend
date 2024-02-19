@@ -61,3 +61,13 @@ exports.updateChild = async (req, res, next) => {
       return res.status(500).json({ status: false, error: 'Error updating child' });
     }
 }
+
+exports.getAllChildren = async (req, res, next) => {
+    try {
+        const allChildren = await childServices.getAllChildren();
+        res.json({ status: true, success: allChildren });
+    } catch (error) {
+        console.error('Error fetching all children:', error);
+        return res.status(500).json({ status: false, error: 'Error fetching all children' });
+    }
+};

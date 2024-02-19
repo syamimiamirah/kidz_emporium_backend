@@ -46,5 +46,17 @@ class childServices{
           throw error;
         }
       }
+
+    static async getAllChildren() {
+        try {
+            const allChildren = await childModel.find();
+            return allChildren;
+        } catch (error) {
+            console.error('Error fetching all children:', error);
+            throw error;
+        }
+    }
+
+      
 }
 module.exports = childServices;

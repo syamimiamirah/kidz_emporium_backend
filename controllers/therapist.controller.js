@@ -1,4 +1,5 @@
 const therapistServices = require("../services/therapist.services");
+const { DateTime } = require('luxon');
 
 exports.createTherapist = async (req, res, next)=> {
     try{
@@ -67,3 +68,32 @@ exports.getTherapistDetails = async (req, res, next) => {
         return res.status(500).json({ status: false, error: 'Error fetching therapist details' });
     }
 }
+
+exports.getAllTherapists = async (req, res, next) => {
+    try {
+        const allTherapists = await therapistServices.getAllTherapists();
+        res.json({ status: true, success: allTherapists });
+    } catch (error) {
+        console.error('Error fetching all therapists:', error);
+        return res.status(500).json({ status: false, error: 'Error fetching all therapists' });
+    }
+};
+
+exports.checkTherapistAvailability = async (req, res, next) => {
+    try {
+      const therapistId = req.params.id;
+      const { startTime, endTime } = req.query;
+        console.log(startTime);
+      // Parse fromDate and toDate to JavaScript Date objects
+      const fromDateObj = DateTime.fromISO(startTime, { zone: 'utc' });
+      const toDateObj = DateTime.fromISO(endTime, { zone: 'utc' });
+  console.log(fromDateObj);
+      // Check therapist availability
+      const isAvailable = await therapistServices.isTherapistAvailable(therapistId, fromDateObj, toDateObj);
+  
+      res.json({ success: true, isTherapistAvailable: isAvailable });
+    } catch (error) {
+      console.error('Error checking therapist availability:', error);
+      res.status(500).json({ success: false, error: 'Error checking therapist availability' });
+    }
+};
