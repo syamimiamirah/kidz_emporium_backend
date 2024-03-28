@@ -1,3 +1,4 @@
+const therapistServices = require('../services/therapist.services');
 const UserService = require('../services/user.services');
 
 exports.register = (req, res, next)=>{
@@ -35,6 +36,16 @@ exports.login = async (req, res, next) => {
             data: results
         })
     });
+};
+
+exports.getAllUsers = async (req, res, next) => {
+    try {
+        const allUsers = await UserService.getAllUsers();
+        res.json({ status: true, success: allUsers });
+    } catch (error) {
+        console.error('Error fetching all users:', error);
+        return res.status(500).json({ status: false, error: 'Error fetching all users' });
+    }
 };
 // let tokenData = {_id: UserService._id, email: UserService.email};
 //         const token = UserService.generateToken(tokenData, "secretKey", '1h');

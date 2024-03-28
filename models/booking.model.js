@@ -9,41 +9,46 @@ const { Schema } = mongoose;
 
 // Define the Booking Schema
 const booking = new Schema({
-            userId: {
-                type: Schema.Types.ObjectId,
-                ref: UserModel.modelName
-            },
-            therapistId: {
-                type: Schema.Types.ObjectId,
-                ref: 'therapist',
-                required: true,
-            },
-            childId: {
-                type: Schema.Types.ObjectId,
-                ref: 'child',
-                required: true,
-            },
-            startTime: {
-                type: Date,
-                required: true,
-            },
-            endTime: {
-                type: Date,
-                required: true,
-            },
-            paymentId: {
-                type: Schema.Types.ObjectId,
-                ref: PaymentModel.modelName
-            },
-        }, {
-            toJson: {
-                transform: function(doc, ret){
-                    ret.bookingId = ret._id.toString();
-                    delete ret._id;
-                    delete ret.__v;
-                },
-            },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: UserModel.modelName
         },
+        service: {
+            type: String, 
+            required: true,
+        },
+        therapistId: {
+            type: Schema.Types.ObjectId,
+            ref: 'therapist',
+            required: true,
+        },
+        childId: {
+            type: Schema.Types.ObjectId,
+            ref: 'child',
+            required: true,
+        },
+        fromDate: {
+            type: Date,
+            required: true,
+        },
+        toDate: {
+            type: Date,
+            required: true,
+        },
+        paymentId: {
+            type: Schema.Types.ObjectId,
+            ref: PaymentModel.modelName
+        },
+        }, 
+        // {
+        //     toJson: {
+        //         transform: function(doc, ret){
+        //             ret.bookingId = ret._id.toString();
+        //             delete ret._id;
+        //             delete ret.__v;
+        //         },
+        //     },
+        // },
         { 
             timestamps: true 
         });

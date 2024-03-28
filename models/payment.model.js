@@ -30,15 +30,16 @@ const payment = new Schema({
                 type: String,
                 default: 'succeeded',
             },
-        }, {
-            toJson: {
-                transform: function(doc, ret){
-                    ret.paymentId = ret._id.toString();
-                    delete ret._id;
-                    delete ret.__v;
-                },
-            },
-        },
+        }, 
+        // {
+        //     toJson: {
+        //         transform: function(doc, ret){
+        //             ret.paymentId = ret._id.toString();
+        //             delete ret._id;
+        //             delete ret.__v;
+        //         },
+        //     },
+        // },
         { 
             timestamps: true 
         });

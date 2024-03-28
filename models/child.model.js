@@ -24,15 +24,16 @@ const child = new Schema({
             type: String,
             required: true
         },
-    }, {
-        toJson: {
-            transform: function(doc, ret){
-                ret.childId = ret._id.toString();
-                delete ret._id;
-                delete ret.__v;
-            },
-        },
     },
+    //  {
+    //     toJson: {
+    //         transform: function(doc, ret){
+    //             ret.childId = ret._id.toString();
+    //             delete ret._id;
+    //             delete ret.__v;
+    //         },
+    //     },
+    // },
     {
         timestamps: true
     });

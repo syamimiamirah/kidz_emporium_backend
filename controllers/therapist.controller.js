@@ -3,8 +3,8 @@ const { DateTime } = require('luxon');
 
 exports.createTherapist = async (req, res, next)=> {
     try{
-        const {userId, therapistName, hiringDate, specialization, aboutMe} = req.body;
-        let therapist = await therapistServices.createTherapist(userId, therapistName, hiringDate, specialization, aboutMe);
+        const {managedBy, therapistId, hiringDate, specialization, aboutMe} = req.body;
+        let therapist = await therapistServices.createTherapist(therapistId, hiringDate, specialization, aboutMe, managedBy);
         res.json({status: true, success: therapist});
 
     }catch(error){
@@ -14,8 +14,8 @@ exports.createTherapist = async (req, res, next)=> {
 
 exports.getTherapist = async (req, res, next) => {
     try {
-        const userId = req.query.userId;
-        let therapist = await therapistServices.getTherapist(userId);
+        const therapistId = req.query.therapistId;
+        let therapist = await therapistServices.getTherapist(therapistId);
         res.json({ status: true, success: therapist });
     } catch (error) {
         next(error);
@@ -25,7 +25,7 @@ exports.getTherapist = async (req, res, next) => {
 
 exports.updateTherapist = async (req, res, next) => {
     try {
-        const therapistId = req.params.id;
+        const{ therapistId} = req.params;
         const updatedData = req.body.updatedData;
         const updatedTherapist = await therapistServices.updateTherapist(therapistId, updatedData);
   
@@ -55,8 +55,9 @@ exports.deleteTherapist = async (req, res, next) => {
 
 exports.getTherapistDetails = async (req, res, next) => {
     try {
-        const { id } = req.params; // Use req.params to get the ID from the URL
-        let therapistDetails = await therapistServices.getTherapistDetails(id);
+        const { therapistId } = req.params; 
+        console.log('Therapist ID:', therapistId);// Use req.params to get the ID from the URL
+        let therapistDetails = await therapistServices.getTherapistDetails(therapistId);
         
         if (!therapistDetails) {
             return res.status(404).json({ status: false, error: 'Therapist not found' });
@@ -81,15 +82,15 @@ exports.getAllTherapists = async (req, res, next) => {
 
 exports.checkTherapistAvailability = async (req, res, next) => {
     try {
-      const therapistId = req.params.id;
-      const { startTime, endTime } = req.query;
-        console.log(startTime);
+      const{ therapistId }= req.params;
+      const { fromDate, toDate } = req.query;
+        console.log(fromDate);
       // Parse fromDate and toDate to JavaScript Date objects
-      const fromDateObj = DateTime.fromISO(startTime, { zone: 'utc' });
-      const toDateObj = DateTime.fromISO(endTime, { zone: 'utc' });
-  console.log(fromDateObj);
+      const fromDateObj = DateTime.fromISO(fromDate, { zone: 'utc' });
+      const toDateObj = DateTime.fromISO(toDate, { zone: 'utc' });
+        console.log('fromDateObj:', fromDateObj);
       // Check therapist availability
-      const isAvailable = await therapistServices.isTherapistAvailable(therapistId, fromDateObj, toDateObj);
+      const isAvailable = await therapistServices.checkTherapistAvailability(therapistId, fromDateObj, toDateObj);
   
       res.json({ success: true, isTherapistAvailable: isAvailable });
     } catch (error) {

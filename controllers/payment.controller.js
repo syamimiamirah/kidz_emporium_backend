@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3nYmyGrf9WCnKcYhMF5j89Z5oOUFpj8wv9DFkJd4UarJJ2Bjaa7WQyf83VHOs5V6jxJLodNCa00XI0tuTH3');
+const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3N47ys1pvDo2VP2YI4wslqtgFt4L0VBL0p7Sj3nD6u4Lg7sx0SXlgbHkqA1XNBQADTlyuAru800SfbiS1mn');
 // paymentController.js
 const paymentServices = require('../services/payment.services');
 const stripeServices = require('../services/stripe.services');
@@ -33,6 +33,7 @@ exports.createPayment = async (req, res, next) => {
     next(error);
   }
 };
+
 
 exports.getPayment = async (req, res, next) => {
     try {
@@ -147,3 +148,28 @@ exports.getAllPayment = async (req, res, next) => {
     return res.status(500).json({ status: false, error: 'Error fetching all payment' });
   }
 };
+
+ // const { userId, cardNumber, expirationDate, cvv } = req.body;
+
+    // // Create a Payment Method
+    // const paymentMethod = await stripeServices.createPaymentMethod({
+    //   type: 'card',
+    //   card: {
+    //     number: cardNumber,
+    //     exp_month: expirationDate.split('/')[0], // Assuming expirationDate is in MM/YY format
+    //     exp_year: expirationDate.split('/')[1],
+    //     cvc: cvv,
+    //   },
+    // });
+
+    // // Attach Payment Method to Customer (if applicable)
+
+    // // Create a Payment Intent
+    // const paymentIntent = await stripeServices.createPaymentIntent({
+    //   amount: 5000, // Assuming the amount is in cents (50.00 USD)
+    //   currency: 'myr',
+    //   payment_method: paymentMethod.id,
+    //   description: `Payment for user ${userId}`,
+    // });
+
+    // Store payment details in your database

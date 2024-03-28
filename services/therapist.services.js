@@ -1,25 +1,27 @@
 const therapistModel = require('../models/therapist.model');
 const bookingModel = require('../models/booking.model');
+const taskModel = require('../models/task.model');
 const { DateTime } = require('luxon');
 const mongoose = require("mongoose");
 
 class therapistServices{
-    static async createTherapist(userId, therapistName, hiringDate, specialization, aboutMe){
-        const createTherapist = new therapistModel({userId, therapistName, hiringDate, specialization, aboutMe});
+  
+    static async createTherapist(therapistId, hiringDate, specialization, aboutMe, managedBy){
+        const createTherapist = new therapistModel({therapistId, hiringDate, specialization, aboutMe, managedBy});
         return await createTherapist.save();
     }
 
-    static async getTherapist(userId, eventName, details, fromDate, toDate){
-        const getTherapist = await therapistModel.find({userId});
+    static async getTherapist(managedBy){
+        const getTherapist = await therapistModel.find({managedBy});
         return getTherapist;
     }
 
-    static async updateTherapist(id, updatedData) {
+    static async updateTherapist(therapistId, updatedData) {
         try {
           // Check if the reminder exists
           const updatedTherapist = await therapistModel.findOneAndUpdate(
-            {_id:id},
-            {$set: { therapistName: updatedData.therapistName, hiringDate: updatedData.hiringDate, specialization: updatedData.specialization, aboutMe: updatedData.aboutMe}},
+            {therapistId: therapistId},
+            {$set: { hiringDate: updatedData.hiringDate, specialization: updatedData.specialization, aboutMe: updatedData.aboutMe}},
             { new: true } // Return the updated document
           );
       
@@ -40,15 +42,16 @@ class therapistServices{
         return deletedTherapist;
     }
 
-    static async getTherapistDetails(id) {
-        try {
-            const therapistDetails = await therapistModel.findById({_id: id});
-            return therapistDetails;
-        } catch (error) {
-            console.error('Error fetching therapist details:', error);
-            throw error;
-        }
-    }
+    static async getTherapistDetails(therapistId) {
+      try {
+          const therapistDetails = await therapistModel.findOne({ therapistId: therapistId });
+          return therapistDetails;
+      } catch (error) {
+          console.error('Error fetching therapist details:', error);
+          throw error;
+      }
+  }
+  
 
     static async getAllTherapists() {
       try {
@@ -60,45 +63,40 @@ class therapistServices{
       }
   }
 
-  static async isTherapistAvailable(therapistId, startTime, endTime) {
+  static async checkTherapistAvailability(therapistId, fromDate, toDate) {
     try {
-      // Find the therapist by ID
-      const therapist = await therapistModel.findById({ _id: therapistId }).exec();
-  
-      if (!therapist) {
-        throw new Error('Therapist not found');
-      }
-      console.log(startTime);
-      // Convert dates to Luxon DateTime objects and ensure they are in UTC
-      const fromDateTime = DateTime.fromISO(startTime, { zone: 'utc' });
-      const toDateTime = DateTime.fromISO(endTime, { zone: 'utc' });
-  
-      console.log('adjustedFromDate:', fromDateTime.toISO());
-      console.log('adjustedToDate:', toDateTime.toISO());
-  
-      // Check for existing bookings within the specified date and time range
-      const existingBookings = await bookingModel.find({
-        therapistId: therapistId,
-        $or: [
-            {
-                startTime: { $lt: toDateTime.toJSDate() },
-                endTime: { $gt: fromDateTime.toJSDate() },
-            },
-            {
-                startTime: { $gte: fromDateTime.toJSDate(), $lt: toDateTime.toJSDate() },
-            },
-            {
-                endTime: { $gt: fromDateTime.toJSDate(), $lte: toDateTime.toJSDate() },
-            },
-        ],
-    }).exec();
+        // Convert fromDate and toDate to JavaScript Date objects
+        const fromDateTime = new Date(fromDate);
+        const toDateTime = new Date(toDate);
 
-    console.log(existingBookings.length)
-    // If there are no existing bookings, the therapist is available
-    return existingBookings.length === 0;
+        // Check for overlapping bookings in taskModel
+        const existingTasks = await taskModel.find({
+            therapistId: therapistId,
+            $or: [
+                { fromDate: { $lt: toDateTime }, toDate: { $gt: fromDateTime } }, // Check for overlapping time range
+                { fromDate: { $gte: fromDateTime, $lt: toDateTime } },
+                { toDate: { $gt: fromDateTime, $lte: toDateTime } }
+            ]
+        }).exec();
+
+        // Check for overlapping bookings in bookingModel
+        const existingBookings = await bookingModel.find({
+            therapistId: therapistId,
+            $or: [
+                { fromDate: { $lt: toDateTime }, toDate: { $gt: fromDateTime } }, // Check for overlapping time range
+                { fromDate: { $gte: fromDateTime, $lt: toDateTime } },
+                { toDate: { $gt: fromDateTime, $lte: toDateTime } }
+            ]
+        }).exec();
+
+        // Combine both existing tasks and bookings
+        const existingEvents = existingTasks.concat(existingBookings);
+        console.log(existingEvents.length);
+        // If there are no existing events, the therapist is available
+        return existingEvents.length === 0;
     } catch (error) {
-      console.error('Error services checking therapist availability:', error);
-      throw new Error('Error checking therapist availability');
+        console.error('Error checking therapist availability:', error);
+        throw new Error('Error checking therapist availability');
     }
   }
 }

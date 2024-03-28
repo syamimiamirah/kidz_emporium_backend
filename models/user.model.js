@@ -34,7 +34,8 @@ const user = mongoose.Schema({
                     delete ret.password;
                 }
             }
-        },{
+        },
+        {
             timestamps: true
         });
 

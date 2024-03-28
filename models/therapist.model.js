@@ -5,14 +5,15 @@ const BookingModel = require("../models/booking.model");
 const { Schema } = mongoose;
 
 const therapist = new Schema({
-        userId: {
+        therapistId: {
             type: Schema.Types.ObjectId,
-            ref: UserModel.modelName
-        },
-        therapistName: {
-            type:String,
+            ref: UserModel.modelName, // Assuming UserModel is the model for users
             required: true
         },
+        // therapistName: {
+        //     type:String,
+        //     required: true
+        // },
         hiringDate: {
             type: Date,
             required: true
@@ -28,17 +29,22 @@ const therapist = new Schema({
         bookings: {
             type: Schema.Types.ObjectId,
             ref: 'booking'
+        },
+        managedBy: {
+            type: Schema.Types.ObjectId,
+            ref: UserModel.modelName 
         }
 
-    }, {
-        toJson: {
-            transform: function(doc, ret){
-                ret.therapistId = ret._id.toString();
-                delete ret._id;
-                delete ret.__v;
-            },
-        },
     },
+    //  {
+    //     toJson: {
+    //         transform: function(doc, ret){
+    //             ret.therapistId = ret._id.toString();
+    //             delete ret._id;
+    //             delete ret.__v;
+    //         },
+    //     },
+    // },
     {
         timestamps: true
     });

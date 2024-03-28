@@ -25,15 +25,16 @@ const reminder = new Schema({
                 required: true
             },
 
-        }, {
-            toJson: {
-                transform: function(doc, ret){
-                    ret.calendarId = ret._id.toString();
-                    delete ret._id;
-                    delete ret.__v;
-                },
-            },
-        },
+        }, 
+        // {
+        //     toJson: {
+        //         transform: function(doc, ret){
+        //             ret.calendarId = ret._id.toString();
+        //             delete ret._id;
+        //             delete ret.__v;
+        //         },
+        //     },
+        // },
         {
             timestamps: true
         });

@@ -6,7 +6,8 @@ const UserModel = require('./models/user.model');
 const ReminderModel = require('./models/reminder.model');
 const errors = require("./middlewares/errors");
 const swaggerUI = require("swagger-ui-express"), swaggerDocument = require("./swagger.json");
-const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3nYmyGrf9WCnKcYhMF5j89Z5oOUFpj8wv9DFkJd4UarJJ2Bjaa7WQyf83VHOs5V6jxJLodNCa00XI0tuTH3');
+const multer = require('multer');
+const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3N47ys1pvDo2VP2YI4wslqtgFt4L0VBL0p7Sj3nD6u4Lg7sx0SXlgbHkqA1XNBQADTlyuAru800SfbiS1mn');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_DB_CONFIG.DB, {

@@ -2,6 +2,7 @@ const user  = require('../models/user.model');
 const bcrypt = require("bcryptjs");
 const auth = require("../middlewares/auth");
 
+
 async function login({email, password}, callback){
     const UserModel = await user.findOne({email});
 
@@ -47,10 +48,19 @@ async function register(params, callback){
         return callback(error);
     });
 }
+async function getAllUsers() {
+    try {
+        const allUsers = await user.find();
+        return allUsers;
+    } catch (error) {
+        console.error('Error fetching all users:', error);
+        throw error;
+    }
+}
 
 module.exports = {
     login, 
-    register
+    register, getAllUsers
 }
 
 // class UserService{

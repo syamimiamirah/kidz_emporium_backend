@@ -16,7 +16,7 @@ const { DateTime } = require('luxon');
 
 exports.createBooking = async (req, res, next) => {
   try {
-    const { userId, therapistId, childId, fromDate, toDate, paymentId } = req.body;
+    const { userId, service, therapistId, childId, fromDate, toDate, paymentId } = req.body;
     console.log('Request Body:', req.body);
 
 
@@ -37,7 +37,7 @@ exports.createBooking = async (req, res, next) => {
     }*/
 
     // If therapist is available, proceed with creating the booking
-    let booking = await bookingServices.createBooking(userId, therapistId, childId, fromDate, toDate, paymentId);
+    let booking = await bookingServices.createBooking(userId, service, therapistId, childId, fromDate, toDate, paymentId);
     res.json({ status: true, success: booking });
 
   } catch (error) {

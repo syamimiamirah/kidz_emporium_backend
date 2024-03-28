@@ -3,8 +3,8 @@ const bookingModel = require('../models/booking.model');
 
 class bookingServices {
   // Create a new booking
-  static async createBooking(userId, therapistId, childId, startTime, endTime, paymentId) {
-    const createBooking = new bookingModel({userId, therapistId, childId, startTime, endTime, paymentId});
+  static async createBooking(userId, service, therapistId, childId, fromDate, toDate, paymentId) {
+    const createBooking = new bookingModel({userId, service, therapistId, childId, fromDate, toDate, paymentId});
     return await createBooking.save();
   }
 
@@ -19,7 +19,7 @@ class bookingServices {
     }
 }
 
-static async getBooking(userId, childName, birthDate, gender, program){
+static async getBooking(userId){
   const getBooking = await bookingModel.find({userId});
   return getBooking;
 }
@@ -48,7 +48,7 @@ static async updateBooking(id, updatedData) {
     // Check if the reminder exists
     const updatedBooking = await bookingModel.findOneAndUpdate(
       {_id:id},
-      {$set: {therapistId: updatedData.therapistId, childId: updatedData.childId, startTime: updatedData.startTime, endTime: updatedData.endTime, status: updatedData.status, paymentId: updatedData.paymentId}},
+      {$set: {service: updatedData.service, therapistId: updatedData.therapistId, childId: updatedData.childId, fromDate: updatedData.fromDate, toDate: updatedData.toDate}},
       { new: true } // Return the updated document
     );
 
