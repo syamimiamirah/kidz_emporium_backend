@@ -1,5 +1,6 @@
 const therapistServices = require('../services/therapist.services');
 const UserService = require('../services/user.services');
+const UserModel = require('../models/user.model');
 
 exports.register = (req, res, next)=>{
     UserService.register(req.body, (error, results) => {
@@ -37,6 +38,28 @@ exports.login = async (req, res, next) => {
         })
     });
 };
+
+exports.registerFCMToken = async (req, res) => {
+    try {
+        const { email, fcmToken } = req.body;
+
+        // Find the user by email
+        const user = await UserModel.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update the user's FCM token
+        user.fcmToken = fcmToken;
+        await user.save();
+
+        res.status(200).json({ message: 'FCM token registered successfully' });
+    } catch (error) {
+        console.error('Error registering FCM token:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 exports.getAllUsers = async (req, res, next) => {
     try {

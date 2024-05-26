@@ -17,13 +17,35 @@ class stripeServices {
       throw error;
     }
   }
+
+  static async validateCard(number, exp_month, exp_year, cvc) {
+    try {
+      // Create a payment method with the provided card details
+      const cardValidation = await stripe.paymentMethods.create({
+        type: 'card',
+        card: {
+          number: number,
+          exp_month: exp_month,
+          exp_year: exp_year,
+          cvc: cvc,
+        }
+      });
+      
+      // If the card information is valid, return the payment method ID
+      return cardValidation.id;
+    } catch (error) {
+      console.error('Error validating card:', error);
+      throw error;
+    }
+  }
+  
   static async createPaymentIntent(amount, currency, paymentMethod, description) {
     try {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // Stripe expects amount in cents
         currency,
         payment_method_types: ['card'],
-        payment_method: paymentMethod,
+        payment_method: paymentMethod, //
         confirm: true, // Automatically confirm the payment intent
         description,
       });

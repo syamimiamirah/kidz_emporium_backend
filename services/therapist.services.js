@@ -99,6 +99,58 @@ class therapistServices{
         throw new Error('Error checking therapist availability');
     }
   }
+
+  static async getAvailableTherapists(fromDate, toDate) {
+    try {
+        // Convert fromDate and toDate to JavaScript Date objects
+        const fromDateTime = new Date(fromDate);
+        const toDateTime = new Date(toDate);
+
+        // Find all therapists
+        const therapists = await therapistModel.find();
+        console.log(therapists); // Assuming TherapistModel is your Mongoose model for therapists
+
+        // Initialize an array to store available therapists
+        const availableTherapists = [];
+
+        // Loop through each therapist
+        for (const therapist of therapists) {
+            // Check for overlapping bookings in taskModel
+            const existingTasks = await taskModel.find({
+                therapistId: therapist.therapistId,
+                $or: [
+                    { fromDate: { $lt: toDateTime }, toDate: { $gt: fromDateTime } }, // Check for overlapping time range
+                    { fromDate: { $gte: fromDateTime, $lt: toDateTime } },
+                    { toDate: { $gt: fromDateTime, $lte: toDateTime } }
+                ]
+            }).exec();
+
+            // Check for overlapping bookings in bookingModel
+            const existingBookings = await bookingModel.find({
+                therapistId: therapist.therapistId,
+                $or: [
+                    { fromDate: { $lt: toDateTime }, toDate: { $gt: fromDateTime } }, // Check for overlapping time range
+                    { fromDate: { $gte: fromDateTime, $lt: toDateTime } },
+                    { toDate: { $gt: fromDateTime, $lte: toDateTime } }
+                ]
+            }).exec();
+
+            // Combine both existing tasks and bookings
+            const existingEvents = existingTasks.concat(existingBookings);
+            console.log(existingEvents.length);
+            // If there are no existing events, the therapist is available
+            if (existingEvents.length === 0) {
+                availableTherapists.push(therapist);
+            }
+        }
+
+        return availableTherapists;
+    } catch (error) {
+        console.error('Error checking therapist availability:', error);
+        throw new Error('Error checking therapist availability');
+        }
+    }
+
 }
 
 module.exports = therapistServices;

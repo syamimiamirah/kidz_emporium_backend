@@ -97,4 +97,22 @@ exports.checkTherapistAvailability = async (req, res, next) => {
       console.error('Error checking therapist availability:', error);
       res.status(500).json({ success: false, error: 'Error checking therapist availability' });
     }
-};
+}; //for checking therapist availability based on therapistId
+
+exports.getAvailableTherapists = async (req, res, next) => {
+    try {
+      const { fromDate, toDate } = req.query;
+      // Parse fromDate and toDate to JavaScript Date objects
+      const fromDateObj = DateTime.fromISO(fromDate, { zone: 'utc' });
+      const toDateObj = DateTime.fromISO(toDate, { zone: 'utc' });
+      console.log('fromDateObj:', fromDateObj);
+      // Call a function to get the list of available therapists on the selected date
+      const availableTherapists = await therapistServices.getAvailableTherapists(fromDateObj, toDateObj);
+  
+      res.json({ success: true, availableTherapists });
+    } catch (error) {
+      console.error('Error checking therapist availability:', error);
+      res.status(500).json({ success: false, error: 'Error checking therapist availability' });
+    }
+  };
+  

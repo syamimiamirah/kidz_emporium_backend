@@ -10,6 +10,7 @@ const ReportController = require("../controllers/report.controller");
 const TaskController = require("../controllers/task.controller");
 const LivestreamController = require("../controllers/livestream.controller");
 const VideoController = require('../controllers/video.controller');
+const NotificationController = require("../controllers/notification.controller");
 
 const multer = require('multer');
 
@@ -19,6 +20,7 @@ const routes = express.Router();
 routes.post("/register", UserController.register);
 routes.post("/login", UserController.login);
 routes.get('/users', UserController.getAllUsers);
+routes.post('/register-fcm-token', UserController.registerFCMToken);
 
 //reminder
 routes.post("/reminder", ReminderController.createReminder);
@@ -43,6 +45,7 @@ routes.delete("/delete-therapist", TherapistController.deleteTherapist);
 routes.get('/get-therapist-details/:therapistId', TherapistController.getTherapistDetails);
 routes.get('/therapists', TherapistController.getAllTherapists);
 routes.get('/check-therapist-availability/:therapistId', TherapistController.checkTherapistAvailability);
+routes.get('/get-available-therapist', TherapistController.getAvailableTherapists);
 
 //booking
 routes.post("/booking", BookingController.createBooking);
@@ -54,6 +57,7 @@ routes.get('/bookings', BookingController.getAllBookings);
 
 //payment
 routes.post("/payment", PaymentController.createPayment);
+//routes.get("/validate-card", PaymentController.validatePayment)
 routes.get("/get-payment", PaymentController.getPayment);
 routes.put("/update-payment/:id", PaymentController.updatePayment);
 routes.delete("/delete-payment/:id", PaymentController.deletePayment);  
@@ -112,11 +116,15 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // Route handler for uploading videos
-routes.post("/video", upload.single('file'), VideoController.createVideo);
+routes.post("/video", VideoController.createVideo);
 routes.get("/get-video", VideoController.getVideo);
 routes.put("/update-video/:id", VideoController.updateVideo);
 routes.delete("/delete-video", VideoController.deleteVideo);
 routes.get('/get-video-details/:id', VideoController.getVideoDetails);
 routes.get('/videos', VideoController.getAllVideos);
 
+
+//send notification
+routes.post("/notification/send", NotificationController.sendNotification); // Route for sending notification
+routes.post("/notification/notify-rescheduled-appointments", NotificationController.notifyUsersOfRescheduledAppointments); // Route for notifying users of rescheduled appointments
 module.exports = routes;

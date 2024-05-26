@@ -3,6 +3,24 @@ const stripe = require('stripe')('sk_test_51Oaa1OHJ2EAdcao3N47ys1pvDo2VP2YI4wslq
 const paymentServices = require('../services/payment.services');
 const stripeServices = require('../services/stripe.services');
 
+
+// exports.validatePayment = async (req, res, next) => {
+//   try {
+//     // Extract card details from the request body
+//     const { cardNumber, expMonth, expYear, cvc } = req.body;
+
+//     // Validate the card using the Stripe API
+//     const cardValidationId = await stripeServices.validateCard(cardNumber, expMonth, expYear, cvc);
+
+//     // Return the ID of the validated card as the response
+//     res.json({ status: true, cardValidationId });
+//   } catch (error) {
+//     // Handle errors
+//     console.error('Error validating card:', error);
+//     res.status(500).json({ status: false, error: 'Error validating card' });
+//   }
+// };
+
 exports.createPayment = async (req, res, next) => {
   try {
     const { userId, amount, currency, paymentMethod } = req.body;
