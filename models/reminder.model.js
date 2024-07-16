@@ -24,7 +24,9 @@ const reminder = new Schema({
                 type: Date,
                 required: true
             },
-
+            notificationsSent: { 
+                type: [Date], 
+                default: [] },
         }, 
         // {
         //     toJson: {

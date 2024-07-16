@@ -12,6 +12,16 @@ class livestreamServices{
         return getLivestream;
     }
 
+    static async getLivestreamDetailsByBookingId(bookingId) {
+        try {
+            const livestreamDetails = await livestreamModel.find({bookingId: bookingId});
+            return livestreamDetails;
+        } catch (error) {
+            console.error('Error fetching meeting details:', error);
+            throw error;
+        }
+    }
+
     static async deleteLivestream(id){
         const deletedLivestream = await livestreamModel.findOneAndDelete({_id: id});
 

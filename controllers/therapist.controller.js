@@ -84,14 +84,13 @@ exports.checkTherapistAvailability = async (req, res, next) => {
     try {
       const{ therapistId }= req.params;
       const { fromDate, toDate } = req.query;
-        console.log(fromDate);
+      console.log(fromDate);
       // Parse fromDate and toDate to JavaScript Date objects
       const fromDateObj = DateTime.fromISO(fromDate, { zone: 'utc' });
       const toDateObj = DateTime.fromISO(toDate, { zone: 'utc' });
         console.log('fromDateObj:', fromDateObj);
       // Check therapist availability
       const isAvailable = await therapistServices.checkTherapistAvailability(therapistId, fromDateObj, toDateObj);
-  
       res.json({ success: true, isTherapistAvailable: isAvailable });
     } catch (error) {
       console.error('Error checking therapist availability:', error);

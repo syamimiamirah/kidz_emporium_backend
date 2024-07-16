@@ -43,8 +43,70 @@ const sendNotification = async (bookingId, message) => {
   }
 };
 
+const sendNotificationReminder = async (userId, message) => {
+  try {
+    // Retrieve user from MongoDB
+    const user = await UserModel.findById(userId);
 
+    if (!user || !user.fcmToken) {
+      throw new Error('User not found or FCM token not available');
+    }
 
+    // Create the notification message
+    const notificationMessage = {
+      notification: {
+        title: message.title,
+        body: message.body,
+      },
+      token: user.fcmToken,
+    };
+
+    // Send the notification using FCM
+    const response = await admin.messaging().send(notificationMessage);
+    console.log('Successfully sent reminder notification:', response);
+  } catch (error) {
+    console.error('Error sending reminder notification:', error);
+  }
+};
+
+const sendNotificationReport = async (bookingId, message) => {
+  try {
+    // Retrieve booking from MongoDB based on the booking ID
+    const booking = await BookingModel.findById(bookingId);
+
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+
+    // Retrieve user from MongoDB based on the userId in the booking
+    const user = await UserModel.findById(booking.userId);
+
+    if (!user || !user.fcmToken) {
+      throw new Error('User not found or FCM token not available');
+    }
+
+    // Create the notification message
+    const notificationMessage = {
+      notification: {
+        title: "Your report is ready",
+        body: "Your therapist has uploaded your report",
+      },
+      data: {
+        bookingId: "reportId", // Include the bookingId in the data payload
+      },
+      token: user.fcmToken,
+    };
+
+    // Send the notification using FCM
+    const response = await admin.messaging().send(notificationMessage);
+    console.log('Successfully sent notification:', response);
+
+    // Log response details
+    console.log('FCM response:', response);
+  } catch (error) {
+    console.error('Error sending report notification:', error);
+  }
+};
 // const sendNotification = async (userId, message) => {
 //   try {
 //     // Retrieve user from MongoDB
@@ -91,4 +153,6 @@ const notifyUsersOfRescheduledAppointments = async () => {
   module.exports = {
     sendNotification,
     notifyUsersOfRescheduledAppointments,
+    sendNotificationReminder,
+    sendNotificationReport
   };

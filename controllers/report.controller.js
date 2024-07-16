@@ -1,11 +1,20 @@
 const reportServices = require("../services/report.services");
+const path = require('path');
+const fs = require('fs');
+const Report = require('../models/report.model');
+const axios = require('axios');
+const NotificationService = require('../services/notification.services');
 
 exports.createReport= async (req, res, next)=>{
     try{
-        const {userId, reportTitle, reportDescription, bookingId, childId} = req.body;
-        let report = await reportServices.createReport(userId, reportTitle, reportDescription, bookingId, childId);
+        const {userId, reportTitle, reportDescription, bookingId, childId, filePath} = req.body;
+        let report = await reportServices.createReport(userId, reportTitle, reportDescription, bookingId, childId, filePath);
+        const message = {
+            title: "Your report is ready",
+            body: "Your therapist has uploaded your report"
+        };
+        await NotificationService.sendNotificationReport(bookingId, message);
         res.json({status: true, success: report});
-
     }catch(error){
         next(error);
     }
@@ -34,7 +43,8 @@ exports.getReportDetailsByBookingId = async (req, res, next) => {
             reportTitle: report.reportTitle,
             reportDescription: report.reportDescription,
             bookingId: report.bookingId,
-            childId: report.childId
+            childId: report.childId,
+            filePath: report.filePath
         }));
 
         res.json({ status: true, success: formattedReportDetails });
@@ -107,3 +117,12 @@ exports.checkReport = async (req, res, next) => {
         res.status(500).json({ success: false, error:'Error check existance of report'});
     }
 }
+exports.downloadPdf = async (req, res, next) => {
+    try {
+        const { id } = req.params; // Get the ID from the URL parameters
+        await reportServices.downloadPdf(id, res); // Call the service function with the ID and response object
+    } catch (error) {
+        console.error('Error downloading PDF:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};

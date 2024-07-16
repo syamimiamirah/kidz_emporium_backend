@@ -14,7 +14,6 @@ const sendNotification = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 // const sendNotification = async (req, res) => {
 //   try {
 //     const { userId, title, body } = req.body;
@@ -40,5 +39,5 @@ const notifyUsersOfRescheduledAppointments = async (req, res) => {
 
 module.exports = {
   sendNotification,
-  notifyUsersOfRescheduledAppointments,
+  notifyUsersOfRescheduledAppointments
 };

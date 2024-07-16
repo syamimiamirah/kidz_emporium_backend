@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 
 class reminderServices{
     static async createReminder(userId, eventName, details, fromDate, toDate){
-        const createReminder = new reminderModel({userId, eventName, details, fromDate, toDate});
-        return await createReminder.save();
+      const notificationDate = new Date(fromDate);
+      const createReminder = new reminderModel({ userId, eventName, details, fromDate, toDate });
+      return await createReminder.save();
     }
 
     static async getReminder(userId, eventName, details, fromDate, toDate){

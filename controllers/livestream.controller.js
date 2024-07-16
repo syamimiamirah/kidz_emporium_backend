@@ -34,6 +34,29 @@ exports.getLivestreamDetails = async (req, res, next) => {
         return res.status(500).json({ status: false, error: "Error fetching livestream session details"})
     }
 }
+
+exports.getLivestreamDetailsByBookingId = async (req, res, next) => {
+    try{
+        const { bookingId } = req.params;
+        let livestreamDetails = await livestreamServices.getLivestreamDetailsByBookingId(bookingId);
+
+        if(!livestreamDetails){
+            return res.status(404).json({status: false, error: "Meeting not found!"});
+        }
+        const formattedLivestreamDetails = livestreamDetails.map(livestream => ({
+            _id: livestream._id, // Include _id field
+            userId: livestream.userId,
+            url: livestream.url,
+            bookingId: livestream.bookingId,
+        }));
+
+        res.json({ status: true, success: formattedLivestreamDetails });
+    }catch(error){
+        console.error('Error fetching meeting details:', error);
+        return res.status(500).json({ status: false, error: 'Error fetching report details' });
+    }
+}
+
 exports.deleteLivestream = async (req, res, next) => {
     try{
         const { id } = req.body;

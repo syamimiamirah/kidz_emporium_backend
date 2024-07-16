@@ -2,9 +2,9 @@ const videoModel = require('../models/video.model');
 const mongoose = require("mongoose");
 
 class videoServices{
-    static async createVideo(userId, videoTitle, videoDescription, childId, filePath) {
+    static async createVideo(userId, videoTitle, videoDescription, childId, filePath, thumbnail) {
         try {
-            const createVideo = new videoModel({ userId, videoTitle, videoDescription, childId, filePath });
+            const createVideo = new videoModel({ userId, videoTitle, videoDescription, childId, filePath, thumbnail });
             return await createVideo.save();
         } catch (error) {
             console.error('Error creating video:', error);
@@ -13,7 +13,7 @@ class videoServices{
     }
     
 
-    static async getVideo(userId, videoTitle, videoDescription, filePath){
+    static async getVideo(userId, videoTitle, videoDescription, filePath, thumbnail){
         const getVideo = await videoModel.find({userId});
         return getVideo;
     }

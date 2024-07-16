@@ -29,6 +29,10 @@ const report = new Schema({
         ref: 'child',
         required: true,
     },
+    filePath: {
+        type:String,
+        required: true
+    },
 
 }, 
 // {

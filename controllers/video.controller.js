@@ -6,8 +6,8 @@ const videoServices = require("../services/video.services");
 // Route handler for uploading videos
 exports.createVideo = async (req, res, next) => {
     try {
-        const { userId, videoTitle, videoDescription, childId, filePath} = req.body;
-        let video = await videoServices.createVideo(userId, videoTitle, videoDescription, childId, filePath);
+        const { userId, videoTitle, videoDescription, childId, filePath, thumbnail} = req.body;
+        let video = await videoServices.createVideo(userId, videoTitle, videoDescription, childId, filePath, thumbnail);
         res.json({ status: true, success: video });
         
     } catch (error) {

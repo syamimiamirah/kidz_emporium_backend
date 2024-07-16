@@ -70,9 +70,10 @@ routes.get("/get-report", ReportController.getReport);
 routes.put("/update-report/:id", ReportController.updateReport);
 routes.delete("/delete-report", ReportController.deleteReport);  
 routes.get('/get-report-details-by-bookingId/:bookingId', ReportController.getReportDetailsByBookingId);
-routes.get('/get-report-details', ReportController.getReportDetails);
+routes.get('/get-report-details/:id', ReportController.getReportDetails);
 routes.get('/reports', ReportController.getAllReports);
 routes.get('/check-report/:bookingId', ReportController.checkReport);
+routes.get('/download-pdf/:id', ReportController.downloadPdf); 
 
 //task
 routes.post("/task", TaskController.createTask);
@@ -89,6 +90,7 @@ routes.put("/update-livestream/:id", LivestreamController.updateLivestream);
 routes.delete("/delete-livestream/:id", LivestreamController.deleteLivestream);
 routes.get("/get-livestream-details/:id", LivestreamController.getLivestreamDetails);
 routes.get("/livestreams", LivestreamController.getAllLivestreams);
+routes.get('/get-livestream-details-by-bookingId/:bookingId', LivestreamController.getLivestreamDetailsByBookingId);
 
 
 //video

@@ -4,14 +4,21 @@ const UserModel = require('../models/user.model');
 
 exports.register = (req, res, next)=>{
     UserService.register(req.body, (error, results) => {
-        if (error){
+        if (error) {
+            console.error("Registration error: ", error);
+            if (error.message === 'Email already registered') {
+                return res.status(400).send({
+                    status: false,
+                    message: error.message,
+                });
+            }
             return next(error);
         }
-            return res.status(200).send({
-                status:true,
-                message: "Success",
-                data: results
-            });
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: results,
+        });
     });
     
     // try{
